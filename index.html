@@ -4,13 +4,12 @@
     <title>Flowchart Generator</title>
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script type="module">
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-      mermaid.initialize({ startOnLoad: true });
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs'
     </script>
-    <script
+    <!-- <script
       type="text/javascript"
       src="https://www.plantuml.com/plantuml-1.2021.6.js"
-    ></script>
+    ></script> -->
   </head>
   <body>
     <h1>Tinnitus History</h1>
@@ -23,8 +22,8 @@
 
     <button id="createFlowchart">Visualize</button>
 
-    <div id="outputFlowchart">
-      
+    <div id="mermaidContainer" class="mermaid">
+
     </div>
 
     <script src="script.js"></script>
