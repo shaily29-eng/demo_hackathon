@@ -4,7 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
 // Define the fetchData function
 async function fetchData() {
   try {
-      const response = await fetch('http://localhost:5500/data');
+      const userText = document.getElementById('inputText').value;
+      const response = await fetch('http://localhost:5500/data', {
+      
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userText }), // Send the user input as JSON
+      });
       const data = await response.json();
       const mermaidSyntax = generateFlowchart(data);
       
@@ -59,9 +67,9 @@ function generateFlowchart(data) {
 
     mermaidSyntax += `${nodeName}["${stepText}"]`;
 
-    if (i > 0) {
-      const prevNodeName = `step${i - 1}`;
-      mermaidSyntax += ` --> ${prevNodeName}`;
+    if (i < flow.length - 1) {
+      const nextNodeName = `step${i + 1}`;
+      mermaidSyntax += ` --> ${nextNodeName}`;
     }
 
     mermaidSyntax += ';\n';
