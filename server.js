@@ -1,49 +1,42 @@
 const express = require('express');
 const app = express();
 
-//temp for testing
-const jsonData = {
-    "flow": ["I went to the mall", "I bought shoes", "I came home"]
-  };
-app.get('/data', (req, res) => {
-res.json(jsonData);
-});
 const port = process.env.PORT || 5500; // Use a defined port or a default
 
-// const axios = require('axios');
-// const { config } = require('dotenv'); // For reading environment variables
+const axios = require('axios');
+const { config } = require('dotenv'); // For reading environment variables
 
-// config(); // Load environment variables from .env
+config(); // Load environment variables from .env
 
-// app.use(express.json());
+app.use(express.json());
 
-// app.post('/generateFlowchart', (req, res) => {
-//     const userDescription = req.body.description;
+app.post('/generateFlowchart', (req, res) => {
+    const userDescription = req.body.description;
 
-//     // Make an API call to OpenAI
-//     axios({
-//         method: 'post',
-//         url: 'https://api.openai.com/v1/engines/davinci/completions',
-//         headers: {
-//             'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`, // Use the environment variable
-//             'Content-Type': 'application/json'
-//         },
-//         data: {
-//             prompt: userDescription,
-//             max_tokens: 100
-//         }
-//     })
-//     .then(response => {
-//         const openaiResponse = response.data;
-//         const generatedFlowchartText = generateFlowchartText(openaiResponse);
+    // Make an API call to OpenAI
+    axios({
+        method: 'post',
+        url: 'https://api.openai.com/v1/engines/davinci/completions',
+        headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`, // Use the environment variable
+            'Content-Type': 'application/json'
+        },
+        data: {
+            prompt: userDescription,
+            max_tokens: 100
+        }
+    })
+    .then(response => {
+        const openaiResponse = response.data;
+        const generatedFlowchartText = generateFlowchartText(openaiResponse);
 
-//         res.json({ generatedFlowchart: generatedFlowchartText });
-//     })
-//     .catch(error => {
-//         console.error('OpenAI API Error:', error);
-//         res.status(500).json({ error: 'Failed to generate the flowchart' });
-//     });
-// });
+        res.json({ generatedFlowchart: generatedFlowchartText });
+    })
+    .catch(error => {
+        console.error('OpenAI API Error:', error);
+        res.status(500).json({ error: 'Failed to generate the flowchart' });
+    });
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
