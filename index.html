@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flowchart Generator</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.0.0/mermaid.min.js"
+    ></script>
+    <script
+      type="text/javascript"
+      src="https://www.plantuml.com/plantuml-1.2021.6.js"
+    ></script>
+  </head>
+  <body>
+    <h1>Flowchart Generator</h1>
+
+    <label for="inputText">User input about Disease:</label>
+    <textarea
+      id="inputText"
+      placeholder="Enter your problem here..."
+    ></textarea>
+
+    <button id="createFlowchart">Create Flowchart</button>
+
+    <div id="outputFlowchart"></div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
