@@ -8,45 +8,41 @@ async function fetchData() {
       const data = await response.json();
       const mermaidSyntax = generateFlowchart(data);
       
-    //   const html = `
-    //   <pre class="mermaid" id="flowchart">
-    //   ${mermaidSyntax}
-    //   </pre>
-    //   <script type="module">
-    //     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-    //     mermaid.initialize({ startOnLoad: true });
-    //   </script>
-    // `;
       const html = `
-      <pre class="mermaid">
-      graph TD 
-      A[Client] --> B[Load Balancer] 
-      B --> C[Server1] 
-      B --> D[Server2]
-      </pre>
-      <script type="module">
-      mermaid.initialize({ startOnLoad: true });
-      </script>
+      <html>
+        <head>
+          <title>Flowchart Generator</title>
+          <link rel="stylesheet" type="text/css" href="style.css" />
+          <!-- <script
+            type="text/javascript"
+            src="https://www.plantuml.com/plantuml-1.2021.6.js"
+          ></script> -->
+        </head>
+        <body>
+          <h1>Your Tinnitus History</h1>
+
+            <pre class="mermaid" id="flowchart">
+              ${mermaidSyntax}
+            </pre>
+            <script type="module">
+              import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+            </script>
+      
+          <script src="script.js"></script>
+        </body>
+      </html>
       `;
 
-      const mermaidContainer = document.getElementById('mermaidContainer');
-      mermaidContainer.innerHTML = html;
-
-      // const mermaidScript = document.createElement('script');
-      // mermaidScript.type = 'module';
-      // mermaidScript.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-
-      // mermaidScript.addEventListener('load', function() {
-      //   mermaidScript.innerHTML = 'mermaid.initialize({ startOnLoad: true });'; // Initialize Mermaid here
-      //   document.body.appendChild(mermaidScript);
-      // });
+      const popupWindow = window.open('', '', 'width=600,height=600');
+        popupWindow.document.open();
+        popupWindow.document.write(html);
+        popupWindow.document.close();
 
   } catch (error) {
       console.error(error);
   }
 }
 
-// Replace this function with code that generates a flowchart based on the input
 function generateFlowchart(data) {
   const { flow } = data;
 
@@ -57,22 +53,19 @@ function generateFlowchart(data) {
   // Initialize the Mermaid syntax
   let mermaidSyntax = 'graph TD;\n';
 
-  // Add nodes and edges for each step in the flow
-  flow.forEach((step, index) => {
-    // Format step text and node name
-    const formattedStep = step.replace(/"/g, '\\"');
-    const nodeName = `step${index}`;
+  for (let i = 0; i < flow.length; i++) {
+    const stepText = flow[i];
+    const nodeName = `step${i}`;
 
-    // Add the step to the Mermaid syntax
-    mermaidSyntax += `${nodeName}["${formattedStep}"]`;
+    mermaidSyntax += `${nodeName}["${stepText}"]`;
 
-    // Connect the step to the previous step (if not the first step)
-    if (index > 0) {
-      mermaidSyntax += ` --> ${nodeName}`;
+    if (i > 0) {
+      const prevNodeName = `step${i - 1}`;
+      mermaidSyntax += ` --> ${prevNodeName}`;
     }
 
     mermaidSyntax += ';\n';
-  });
+  }
 
   return mermaidSyntax;
 }
