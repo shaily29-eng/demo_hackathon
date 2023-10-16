@@ -1,59 +1,47 @@
 document.getElementById('createFlowchart').addEventListener('click', function() {
     const inputText = document.getElementById('inputText').value;
     const outputFlowchart = document.getElementById('outputFlowchart');
-    
-    // Replace this part with code that converts input to a flowchart
-    const flowchartData = generateFlowchart(inputText);
-    
-    // For simplicity, we're displaying the flowchart data as JSON here
-    outputFlowchart.textContent = JSON.stringify(flowchartData, null, 2);
-});
+
+    fetch('http://localhost:3000/data')
+    .then(response => response.json())
+    .then(data => {
+    // Call the generateFlowchart function to create the Mermaid syntax
+    const mermaidSyntax = generateFlowchart(data);
+
+    // Display the Mermaid syntax in your HTML element
+    outputFlowchart.textContent = mermaidSyntax;
+    })
+    .catch(error => console.error(error));
+
 
 // Replace this function with code that generates a flowchart based on the input
-function generateFlowchart(inputText) {
-    // You would need to parse the input and create a flowchart data structure here.
-    // This can be a complex task depending on the specific requirements.
-    // You may want to use a library or create your own logic for generating flowcharts.
-    // For simplicity, we're just returning a sample JSON object.
-
-    return {
-        nodes: [
-            { id: 1, text: "Start" },
-            { id: 2, text: "Action 1" },
-            { id: 3, text: "Action 2" },
-            { id: 4, text: "End" }
-        ],
-        edges: [
-            { source: 1, target: 2 },
-            { source: 2, target: 3 },
-            { source: 3, target: 4 }
-        ]
-    };
-}
-
-// document.getElementById('createFlowchart').addEventListener('click', function() {
-//     const inputText = document.getElementById('inputText').value;
-//     const outputFlowchart = document.getElementById('outputFlowchart');
-
-//     // Make an API call to OpenAI
-//     fetch('/generateFlowchart', {
-//         method: 'POST',
-//         body: JSON.stringify({ description: inputText }),
-//         headers: { 'Content-Type': 'application/json' }
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         const generatedFlowchartText = data.generatedFlowchart; // Get the flowchart text from the API response
-        
-//         // Render the flowchart using Mermaid
-//         mermaid.mermaidAPI.initialize({
-//             startOnLoad: true
-//         });
-//         mermaid.mermaidAPI.render('outputFlowchart', generatedFlowchartText, function(svgCode, bindFunctions) {
-//             outputFlowchart.innerHTML = svgCode;
-//         });
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-// });
+function generateFlowchart(data) {
+    const { flow } = data;
+  
+    if (!flow || !Array.isArray(flow)) {
+      return ''; // Handle invalid data
+    }
+  
+    // Initialize the Mermaid syntax
+    let mermaidSyntax = 'graph TD;\n';
+  
+    // Add nodes and edges for each step in the flow
+    flow.forEach((step, index) => {
+      // Format step text and node name
+      const formattedStep = step.replace(/"/g, '\\"');
+      const nodeName = `step${index}`;
+  
+      // Add the step to the Mermaid syntax
+      mermaidSyntax += `${nodeName}["${formattedStep}"]`;
+  
+      // Connect the step to the previous step (if not the first step)
+      if (index > 0) {
+        mermaidSyntax += ` --> ${nodeName}`;
+      }
+  
+      mermaidSyntax += ';\n';
+    });
+  
+    return mermaidSyntax;
+  }
+})
