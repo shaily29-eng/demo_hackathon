@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
 async function fetchData() {
   try {
       const userText = document.getElementById('inputText').value;
+
+      if (!userText) {
+        console.log('User input is empty.');
+        return; // Exit the function
+      }
+
       const response = await fetch('http://localhost:5500/data', {
       
       method: 'POST',
@@ -21,13 +27,9 @@ async function fetchData() {
         <head>
           <title>Flowchart Generator</title>
           <link rel="stylesheet" type="text/css" href="style.css" />
-          <!-- <script
-            type="text/javascript"
-            src="https://www.plantuml.com/plantuml-1.2021.6.js"
-          ></script> -->
         </head>
         <body>
-          <h1>Your Tinnitus History</h1>
+          <h1>Your MediMap</h1>
 
             <pre class="mermaid" id="flowchart">
               ${mermaidSyntax}
@@ -35,8 +37,7 @@ async function fetchData() {
             <script type="module">
               import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
             </script>
-      
-          <script src="script.js"></script>
+
         </body>
       </html>
       `;
